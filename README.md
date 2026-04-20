@@ -7,6 +7,7 @@ Inputs: 2x Push Buttons
 Outputs: 3x LEDs 
 
 ⚙️ How It Works
+
 The system utilizes two primary interaction flows:
 
 Button 1 (The Selector): Triggered via EXTI. Pushing this button cycles an internal state machine (LED 1 -> LED 2 -> LED 3). It sends a SELECT_NEXT command to the main Queue.
