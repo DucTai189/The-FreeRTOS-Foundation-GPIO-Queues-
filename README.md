@@ -1,9 +1,11 @@
 This repository contains a foundational FreeRTOS implementation demonstrating decoupled hardware-to-software communication. Running on the Cortex-M4 core, 
 this exercise focuses on safely passing data from External Interrupt Service Routines (EXTI) to RTOS tasks using Queues.
+
 🛠️ Hardware Requirements
 Target Board: STM32MP157 Discovery Kit running on the Cortex-M4 coprocessor
 Inputs: 2x Push Buttons
 Outputs: 3x LEDs 
+
 ⚙️ How It Works
 The system utilizes two primary interaction flows:
 
