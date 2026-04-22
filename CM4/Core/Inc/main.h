@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "FreeRTOS.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -73,6 +73,8 @@ void Error_Handler(void);
 #define BUTTON_TOGGLE_LED_Pin GPIO_PIN_8
 #define BUTTON_TOGGLE_LED_GPIO_Port GPIOG
 #define BUTTON_TOGGLE_LED_EXTI_IRQn EXTI8_IRQn
+#define LED_B_Pin GPIO_PIN_11
+#define LED_B_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

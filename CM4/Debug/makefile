@@ -10,6 +10,10 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include OPENAMP/subdir.mk
+-include Middlewares/Third_Party/SEGGER/SEGGER/Syscalls/subdir.mk
+-include Middlewares/Third_Party/SEGGER/SEGGER/subdir.mk
+-include Middlewares/Third_Party/SEGGER/OS/subdir.mk
+-include Middlewares/Third_Party/SEGGER/Config/subdir.mk
 -include Middlewares/Third_Party/OpenAMP/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/subdir.mk
 -include Drivers/STM32MP1xx_HAL_Driver/subdir.mk

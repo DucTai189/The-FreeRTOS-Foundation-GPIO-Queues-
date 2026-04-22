@@ -75,7 +75,19 @@ const osThreadAttr_t Tsk_ControlLed_attributes = {
   .cb_size = sizeof(Tsk_ControlLedControlBlock),
   .stack_mem = &Tsk_ControlLedBuffer[0],
   .stack_size = sizeof(Tsk_ControlLedBuffer),
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal2,
+};
+/* Definitions for Tsk_BlikingLed */
+osThreadId_t Tsk_BlikingLedHandle;
+uint32_t Tsk_BlikingLedBuffer[ 128 ];
+osStaticThreadDef_t Tsk_BlikingLedControlBlock;
+const osThreadAttr_t Tsk_BlikingLed_attributes = {
+  .name = "Tsk_BlikingLed",
+  .cb_mem = &Tsk_BlikingLedControlBlock,
+  .cb_size = sizeof(Tsk_BlikingLedControlBlock),
+  .stack_mem = &Tsk_BlikingLedBuffer[0],
+  .stack_size = sizeof(Tsk_BlikingLedBuffer),
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for Trigger_LED */
 osMessageQueueId_t Trigger_LEDHandle;
@@ -96,6 +108,7 @@ const osMessageQueueAttr_t Trigger_LED_attributes = {
 
 void StartDefaultTask(void *argument);
 void StartTask03(void *argument);
+void StartTask02(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -136,6 +149,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of Tsk_ControlLed */
   Tsk_ControlLedHandle = osThreadNew(StartTask03, NULL, &Tsk_ControlLed_attributes);
 
+  /* creation of Tsk_BlikingLed */
+  Tsk_BlikingLedHandle = osThreadNew(StartTask02, NULL, &Tsk_BlikingLed_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -157,8 +173,10 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+	static uint32_t idle_counter = 0;
   for(;;)
   {
+	  idle_counter ++;
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
@@ -175,7 +193,7 @@ void StartTask03(void *argument)
 {
   /* USER CODE BEGIN StartTask03 */
 	TickType_t last_wakeup_time = xTaskGetTickCount();
-	const TickType_t frequency = pdMS_TO_TICKS(20);
+	const TickType_t frequency = pdMS_TO_TICKS(10);
   static Led_Control_st Temp_Led_Control_st ;
   static GPIO_TypeDef* const Port_Led[3] = { LED_1_GPIO_Port, LED_2_GPIO_Port, LED_3_GPIO_Port};
   static const uint16_t Pin_Led[3] = {LED_1_Pin, LED_2_Pin, LED_3_Pin};
@@ -184,16 +202,47 @@ void StartTask03(void *argument)
   {
     // Receive data select led
     // Receive data toggle led
-    if( (xQueueReceive(Trigger_LEDHandle, &Temp_Led_Control_st, portMAX_DELAY) == pdPASS) )
+    if( (xQueueReceive(Trigger_LEDHandle, &Temp_Led_Control_st, 10) == pdPASS) )
     {
   
         HAL_GPIO_WritePin(Port_Led[Temp_Led_Control_st.Led_selected_u8], Pin_Led[Temp_Led_Control_st.Led_selected_u8], (GPIO_PinState)Temp_Led_Control_st.led_state_u8 );
     }
-    vTaskDelayUntil(&last_wakeup_time,frequency);
+  //  vTaskDelayUntil(&last_wakeup_time,frequency);
     // osDelay(1);
       //osDelay(500);
     }
   /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the Tsk_BlikingLed thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+void StartTask02(void *argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  /* Infinite loop */
+  TickType_t last_wakeup_time = xTaskGetTickCount();
+	const TickType_t frequency = pdMS_TO_TICKS(10);
+  static uint8_t counter_u8 = 0;
+  for(;;)
+  {
+    if(counter_u8 < 50)
+    {
+    	counter_u8 ++;
+      
+    }
+    else
+    {
+    	counter_u8 = 0;
+      HAL_GPIO_TogglePin(LED_B_GPIO_Port,LED_B_Pin);
+    }
+    vTaskDelayUntil(&last_wakeup_time,frequency);
+  }
+  /* USER CODE END StartTask02 */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "SEGGER_SYSVIEW.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+#define DWT_CTRL     (*(volatile uint32_t*)0xE0001000)
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,6 +80,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+  /* USER CODE END 2 */
   /* USER CODE END Init */
 
   if(IS_ENGINEERING_BOOT_MODE())
@@ -102,7 +103,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  // Enable the DWT cycle counter for runtime statistics
+  DWT_CTRL |= (1<<0) ;
+  SEGGER_SYSVIEW_Conf();
+  // Start recording
+  SEGGER_SYSVIEW_Start();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -116,6 +121,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  // Initialize SEGGER SystemView
+
+
   while (1)
   {
 

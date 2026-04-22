@@ -44,6 +44,10 @@
 
 /* USER CODE BEGIN Includes */
 /* Section where include file can be added */
+/* Include SEGGER SystemView trace support */
+#ifndef INCLUDE_SEGGER_SYSVIEW
+    #define INCLUDE_SEGGER_SYSVIEW 1
+#endif
 /* USER CODE END Includes */
 
 /* Ensure definitions are only used by the compiler, and not by the assembler. */
@@ -83,6 +87,8 @@ extern uint32_t SystemCoreClock;
 /* Defaults to size_t for backward compatibility, but can be changed
    if lengths will always be less than the number of bytes in a size_t. */
 #define configMESSAGE_BUFFER_LENGTH_TYPE         size_t
+#define INCLUDE_xTaskGetIdleTaskHandle 1
+#define INCLUDE_pxTaskGetStackStart 1
 /* USER CODE END MESSAGE_BUFFER_LENGTH_TYPE */
 
 /* Co-routine definitions. */
@@ -154,6 +160,33 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 header file. */
 /* USER CODE BEGIN 1 */
 #define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );}
+#ifndef INCLUDE_xTaskGetCurrentTaskHandleImpl
+    #define INCLUDE_xTaskGetCurrentTaskHandleImpl 1
+#endif
+
+#ifndef INCLUDE_xTaskGetSchedulerState
+    #define INCLUDE_xTaskGetSchedulerState 1
+#endif
+
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark
+    #define INCLUDE_uxTaskGetStackHighWaterMark 1
+#endif
+
+#ifndef configUSE_TRACE_FACILITY
+    #define configUSE_TRACE_FACILITY 1
+#endif
+#ifndef traceTASK_SWITCHED_IN
+    #define traceTASK_SWITCHED_IN()
+#endif
+
+#ifndef traceTASK_SWITCHED_OUT
+    #define traceTASK_SWITCHED_OUT()
+#endif
+
+#ifndef traceISR_ENTER
+    #define traceISR_ENTER()
+    #define traceISR_EXIT()
+#endif
 /* USER CODE END 1 */
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
@@ -168,6 +201,7 @@ standard names. */
 /* Override CubeMX's flawed SysTick macro for Engineering Mode */
 #undef USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION
 #define USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION 0
+#include "SEGGER_SYSVIEW_FreeRTOS.h"
 /* USER CODE END Defines */
 
 #endif /* FREERTOS_CONFIG_H */

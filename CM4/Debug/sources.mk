@@ -29,5 +29,9 @@ Core/ThreadSafe \
 Drivers/STM32MP1xx_HAL_Driver \
 Middlewares/Third_Party/FreeRTOS \
 Middlewares/Third_Party/OpenAMP \
+Middlewares/Third_Party/SEGGER/Config \
+Middlewares/Third_Party/SEGGER/OS \
+Middlewares/Third_Party/SEGGER/SEGGER \
+Middlewares/Third_Party/SEGGER/SEGGER/Syscalls \
 OPENAMP \
 
